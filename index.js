@@ -5,6 +5,7 @@ const PORT = process.env.PORT;
 const app = express();
 
 import contactRoute from './routes/contactRoute.js'
+import userRoute from './routes/userRoute.js';
 import handleError from './middleware/handleError.js';
 import mongooseDB from './config/dbConfig.js';
 
@@ -14,6 +15,8 @@ app.use(handleError);
 mongooseDB();
 
 app.use('/contacts', contactRoute);
+app.use('/user', userRoute);
+
 app.use('/', (req, res, next)=>{
     res.send("Hello World");
 })

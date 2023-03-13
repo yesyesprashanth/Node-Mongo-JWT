@@ -32,12 +32,15 @@ export const createContact = asyncHandler(async(req, res, next) =>{
 //route: /contact
 // access: public
 export const getContact = asyncHandler(async(req, res, next) => {
-    if(!id){
+    const id = req.params.id;
+
+    const user = await contactModel.findById(id);
+    if(!user){
         res.status(404);
         throw new Error("Id not found");
     }
     
-    res.status(200).send({id:id, data:"All Contacts"});
+    res.status(200).send({id:id, data:user});
 })
 
 // @desc: update contact
@@ -45,7 +48,8 @@ export const getContact = asyncHandler(async(req, res, next) => {
 // access: public
 export const updateContact = asyncHandler(async(req, res, next) => {
     const id = req.params.id;
-    if(!id){
+    const user = await contactModel.findById(id);
+    if(!user){
         res.status(404);
         throw new Error("Id not found");
     }
@@ -55,8 +59,18 @@ export const updateContact = asyncHandler(async(req, res, next) => {
         res.status(400);
         throw new Error("All fields are mandatory");
     }
+
+    const newContact = {
+        firstname: firstName,
+        lastname:lastName, 
+        age:age,
+    }
+
+    const updatedUserData = await contactModel.findByIdAndUpdate(
+        id, newContact, {new:true}
+    );
   
-    res.status(200).send({id:id, data:"All Contacts"});
+    res.status(200).send({id:id, data: updatedUserData});
 })
 
 // @desc: delete a contact
@@ -65,10 +79,12 @@ export const updateContact = asyncHandler(async(req, res, next) => {
 export const deleteContact = asyncHandler(async(req, res, next)=>{
     const id = req.params.id;
 
-    if(!id){
+    const user = await contactModel.findById(id);
+    if(!user){
         res.status(404);
-        throw new Error("Id not found");
+        throw new Error("User not found");
     }
 
-    res.status(200).send({id: id, data:"All Contacts"});
+    const deletedUserData = await contactModel.findByIdAndDelete(id);
+    res.status(200).send({id: id, result: "user data deleted" });
 })

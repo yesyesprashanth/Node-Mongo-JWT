@@ -13,6 +13,8 @@ const contactSchema = mongoose.Schema({
         type:Number,
         required:[true, "Age is compulsory"]
     }
+},{
+    timestamps:true,
 })
 
 export default mongoose.model("contactModel", contactSchema);
